@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'code',
-    'journal_entry_date',
+    'journal_date',
     'description',
     'total_debit',
     'total_credit',

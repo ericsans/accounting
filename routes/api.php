@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountsController;
+use App\Http\Controllers\FinancialReportsController;
 use App\Http\Controllers\JournalEntriesController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,11 @@ Route::prefix('journal-entries')->group(function () {
         Route::post('/', 'store')->name('journalEntry.store');
         Route::put('/{journalEntry}', 'update')->name('journalEntry.update');
         Route::delete('/{journalEntry}', 'destroy')->name('journalEntry.destroy');
+    });
+});
+
+Route::prefix('financial-reports')->group(function () {
+    Route::controller(FinancialReportsController::class)->group(function () {
+        Route::get('/balance-sheet', 'balanceSheet')->name('financialReport.balanceSheet');
     });
 });

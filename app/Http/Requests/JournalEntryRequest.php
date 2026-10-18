@@ -20,7 +20,7 @@ class JournalEntryRequest extends FormRequest
             'code' => [
                 'required',
                 'string',
-                Rule::unique('journal_entries', 'code')->ignore('id'),
+                Rule::unique('journal_entries', 'code')->ignore($this->route('journalEntry')?->id),
             ],
             'journal_date' => [
                 'required',
