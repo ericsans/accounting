@@ -19,10 +19,12 @@ class FinancialReportsController extends Controller
         $accounts = DB::table('accounts')
             ->join('account_classifications', 'account_classifications.id', '=', 'accounts.account_classification_id')
             ->leftJoin('journal_entry_details', 'journal_entry_details.account_id', '=', 'accounts.id')
-            ->leftJoin('journal_entries', function ($join) use ($asOf) {
-                $join->on('journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
-                     ->whereDate('journal_entries.journal_date', '<=', $asOf);
-            })
+            ->leftJoin(
+                'journal_entries',
+                fn ($join) =>
+                    $join->on('journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
+                         ->whereDate('journal_entries.journal_date', '<=', $asOf)
+            )
             ->select([
                 'accounts.id',
                 'accounts.code',
@@ -49,43 +51,36 @@ class FinancialReportsController extends Controller
                 return $account;
             });
 
-        $assetsType = AccountClassificationRootType::Assets->value;
-        $liabilitiesType = AccountClassificationRootType::Liabilities->value;
-        $equityType = AccountClassificationRootType::Equity->value;
-        $revenueType = AccountClassificationRootType::Revenue->value;
-        $expensesType = AccountClassificationRootType::Expenses->value;
-
         $mapAccount = fn ($account) => [
             'account_id' => $account->id,
             'account_code' => $account->code,
             'account_name' => $account->name,
             'balance' => $account->balance,
         ];
+        $assetAccounts = $accounts->where('root_type', AccountClassificationRootType::Assets->value)->map($mapAccount)->values();
+        $liabilityAccounts = $accounts->where('root_type', AccountClassificationRootType::Liabilities->value)->map($mapAccount)->values();
+        $equityAccounts = $accounts->where('root_type', AccountClassificationRootType::Equity->value)->map($mapAccount)->values();
 
-        $assets = $accounts->where('root_type', $assetsType)->map($mapAccount)->values();
-        $liabilities = $accounts->where('root_type', $liabilitiesType)->map($mapAccount)->values();
-        $equity = $accounts->where('root_type', $equityType)->map($mapAccount)->values();
-
-        $totalAssets = round($assets->sum('balance'), 2);
-        $totalLiabilities = round($liabilities->sum('balance'), 2);
-        $totalEquity = round($equity->sum('balance'), 2);
-        $totalRevenue = round($accounts->where('root_type', $revenueType)->sum('balance'), 2);
-        $totalExpenses = round($accounts->where('root_type', $expensesType)->sum('balance'), 2);
+        $totalAssets = round($assetAccounts->sum('balance'), 2);
+        $totalLiabilities = round($liabilityAccounts->sum('balance'), 2);
+        $totalEquity = round($equityAccounts->sum('balance'), 2);
+        $totalRevenue = round($accounts->where('root_type', AccountClassificationRootType::Revenue->value)->sum('balance'), 2);
+        $totalExpenses = round($accounts->where('root_type', AccountClassificationRootType::Expenses->value)->sum('balance'), 2);
         $netIncome = round($totalRevenue - $totalExpenses, 2);
         $totalEquityWithNetIncome = round($totalEquity + $netIncome, 2);
 
         return response()->json([
             'as_of' => $asOf,
             'assets' => [
-                'accounts' => $assets,
+                'accounts' => $assetAccounts,
                 'total' => $totalAssets,
             ],
             'liabilities' => [
-                'accounts' => $liabilities,
+                'accounts' => $liabilityAccounts,
                 'total' => $totalLiabilities,
             ],
             'equity' => [
-                'accounts' => $equity,
+                'accounts' => $equityAccounts,
                 'net_income' => $netIncome,
                 'total' => $totalEquityWithNetIncome,
             ],
