@@ -28,7 +28,8 @@ This project provides a simple accounting backend for managing double-entry jour
 
 * **Journal Entries:** Record financial transactions with balanced debit and credit entries.
 * **General Ledger Report:** Retrieve detailed account activity within an optional date range (`from` and `to`), along with opening and closing balance calculations.
-* **Financial Reports:** Generate a Balance Sheet report as of a specified date (`as_of`).
+* **Balance Sheet:** Generate a Balance Sheet report as of a specified date (`as_of`).
+* **Trial Balance:** Generate a Trial Balance report as of a specified date (`as_of`).
 * **Income Statement:** Report revenue, expenses, and net income for a date range (`from` and `to`).
 
 ## Setup Instructions
