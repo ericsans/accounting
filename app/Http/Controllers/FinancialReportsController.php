@@ -87,6 +87,60 @@ class FinancialReportsController extends Controller
         ]);
     }
 
+    public function trialBalance(Request $request)
+    {
+        $filters = $request->validate([
+            'as_of' => ['required', 'date'],
+        ]);
+
+        $asOf = $filters['as_of'];
+        $accounts = DB::table('accounts')
+            ->leftJoin('journal_entry_details', 'journal_entry_details.account_id', '=', 'accounts.id')
+            ->leftJoin('journal_entries', function ($join) use ($asOf) {
+                $join->on('journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
+                    ->whereDate('journal_entries.journal_date', '<=', $asOf);
+            })
+            ->select([
+                'accounts.id',
+                'accounts.code',
+                'accounts.name',
+            ])
+            ->selectRaw('COALESCE(SUM(CASE WHEN journal_entries.id IS NOT NULL THEN journal_entry_details.debit ELSE 0 END), 0) AS total_debit')
+            ->selectRaw('COALESCE(SUM(CASE WHEN journal_entries.id IS NOT NULL THEN journal_entry_details.credit ELSE 0 END), 0) AS total_credit')
+            ->groupBy(
+                'accounts.id',
+                'accounts.code',
+                'accounts.name'
+            )
+            ->orderBy('accounts.code')
+            ->get()
+            ->map(function ($account) {
+                $totalDebit = (float) $account->total_debit;
+                $totalCredit = (float) $account->total_credit;
+                $netBalance = round($totalDebit - $totalCredit, 2);
+
+                $account->debit = $netBalance > 0 ? $netBalance : 0.0;
+                $account->credit = $netBalance < 0 ? abs($netBalance) : 0.0;
+
+                unset($account->total_debit, $account->total_credit);
+
+                return $account;
+            });
+
+        $mapAccount = fn ($account) => [
+            'account_id' => $account->id,
+            'account_code' => $account->code,
+            'account_name' => $account->name,
+            'debit' => $account->debit,
+            'credit' => $account->credit,
+        ];
+
+        return response()->json([
+            'as_of' => $asOf,
+            'accounts' => $accounts->map($mapAccount)->values(),
+        ]);
+    }
+
     public function incomeStatement(Request $request)
     {
         $filters = $request->validate([

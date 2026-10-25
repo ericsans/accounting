@@ -17,7 +17,8 @@ A lightweight Laravel-based accounting API that provides basic double-entry book
    * [Delete Journal Entry](#3-delete-journal-entry)
    * [Get Account Ledger](#4-get-account-ledger)
    * [Balance Sheet Report](#5-balance-sheet-report)
-   * [Income Statement Report](#6-income-statement-report)
+   * [Trial Balance Report](#6-trial-balance-report)
+   * [Income Statement Report](#7-income-statement-report)
 
 ## About the Project
 
@@ -452,7 +453,170 @@ curl -X GET "http://localhost:8000/api/financial-reports/balance-sheet?as_of=202
 }
 ```
 
-### 6. Income Statement Report
+### 6. Trial Balance Report
+
+* **Endpoint:** `GET /api/financial-reports/trial-balance`
+* **Query Parameters:**
+  * `as_of` (required, date): The cutoff date for the balance sheet (`YYYY-MM-DD`).
+
+#### cURL Request
+
+```bash
+curl -X GET "http://localhost:8000/api/financial-reports/trial-balance?as_of=2027-10-25" \
+  -H "Accept: application/json"
+```
+
+#### Response (`200 OK`)
+
+```json
+{
+    "as_of": "2027-10-25",
+    "accounts": [
+        {
+            "account_id": 1,
+            "account_code": "1101",
+            "account_name": "Petty Cash",
+            "debit": 1000,
+            "credit": 0
+        },
+        {
+            "account_id": 2,
+            "account_code": "1201",
+            "account_name": "Bank",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 3,
+            "account_code": "1301",
+            "account_name": "Account Receiveable",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 4,
+            "account_code": "1401",
+            "account_name": "Inventory",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 5,
+            "account_code": "1501",
+            "account_name": "Property",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 6,
+            "account_code": "2101",
+            "account_name": "Account Payable",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 7,
+            "account_code": "2102",
+            "account_name": "Tax Payable",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 8,
+            "account_code": "3101",
+            "account_name": "Owner Capital",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 9,
+            "account_code": "3201",
+            "account_name": "Current Year Earning",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 10,
+            "account_code": "4101",
+            "account_name": "Food Sales",
+            "debit": 0,
+            "credit": 1000
+        },
+        {
+            "account_id": 11,
+            "account_code": "4102",
+            "account_name": "Beverage Sales",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 12,
+            "account_code": "4103",
+            "account_name": "Service Charge",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 13,
+            "account_code": "5101",
+            "account_name": "Cost of Food Sales",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 14,
+            "account_code": "5102",
+            "account_name": "Cost of Beverage Sales",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 15,
+            "account_code": "6101",
+            "account_name": "Sales Discount",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 16,
+            "account_code": "6102",
+            "account_name": "Purchase Discount",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 17,
+            "account_code": "6201",
+            "account_name": "Rent Expense",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 18,
+            "account_code": "7101",
+            "account_name": "Property Depreciation",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 19,
+            "account_code": "8101",
+            "account_name": "Interest Income",
+            "debit": 0,
+            "credit": 0
+        },
+        {
+            "account_id": 20,
+            "account_code": "9100",
+            "account_name": "Miscellaneous Expense",
+            "debit": 0,
+            "credit": 0
+        }
+    ],
+}
+```
+
+### 7. Income Statement Report
 
 * **Endpoint:** `GET /api/financial-reports/income-statement`
 * **Query Parameters:**
