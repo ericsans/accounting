@@ -16,7 +16,8 @@ A lightweight Laravel-based accounting API that provides basic double-entry book
    * [Update Journal Entry](#2-update-journal-entry)
    * [Delete Journal Entry](#3-delete-journal-entry)
    * [Get Account Ledger](#4-get-account-ledger)
-   * [Get Balance Sheet Report](#5-get-balance-sheet-report)
+   * [Balance Sheet Report](#5-balance-sheet-report)
+   * [Income Statement Report](#6-income-statement-report)
 
 ## About the Project
 
@@ -345,7 +346,7 @@ curl -X GET "http://localhost:8000/api/accounts/ledger?account_id=1&from=2026-10
     "closing_balance": 1000,
     "transactions": [
         {
-            "journal_date": "2026-10-18 10:30:00",
+            "journal_date": "2026-10-18 10:30:00account_classificationsaccount_classifications",
             "code": "JV-2026-0002",
             "journal_description": "Test",
             "rownumber": 1,
@@ -359,7 +360,7 @@ curl -X GET "http://localhost:8000/api/accounts/ledger?account_id=1&from=2026-10
 }
 ```
 
-### 5. Get Balance Sheet Report
+### 5. Balance Sheet Report
 
 * **Endpoint:** `GET /api/financial-reports/balance-sheet`
 * **Query Parameters:**
@@ -447,5 +448,49 @@ curl -X GET "http://localhost:8000/api/financial-reports/balance-sheet?as_of=202
         "net_income": 1000,
         "total": 1000
     }
+}
+```
+
+### 6. Income Statement Report
+
+* **Endpoint:** `GET /api/financial-reports/income-statement`
+* **Query Parameters:**
+    * `from` (required, date): The start date for the income statement (`YYYY-MM-DD`).
+    * `to` (required, date): The end date for the income statement (`YYYY-MM-DD`). Must be on or after `from`
+
+```bash
+curl -X GET "http://localhost:8000/api/financial-reports/income-statement?from=2026-10-01&to=2026-10-31" \
+  -H "Accept: application/json"
+```
+
+Example response:
+
+```json
+{
+  "from": "2026-10-01",
+  "to": "2026-10-31",
+  "revenue": {
+    "accounts": [
+      {
+        "account_id": 10,
+        "account_code": "4101",
+        "account_name": "Food Sales",
+        "balance": 1000
+      }
+    ],
+    "total": 1000
+  },
+  "expenses": {
+    "accounts": [
+      {
+        "account_id": 13,
+        "account_code": "5101",
+        "account_name": "Cost of Food Sales",
+        "balance": 300
+      }
+    ],
+    "total": 300
+  },
+  "net_income": 700
 }
 ```

@@ -22,5 +22,6 @@ Route::prefix('journal-entries')->group(function () {
 Route::prefix('financial-reports')->group(function () {
     Route::controller(FinancialReportsController::class)->group(function () {
         Route::get('/balance-sheet', 'balanceSheet')->name('financialReport.balanceSheet');
+        Route::get('/income-statement', 'incomeStatement')->name('financialReport.incomeStatement');
     });
 });
