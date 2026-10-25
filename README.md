@@ -422,13 +422,13 @@ curl -X GET "http://localhost:8000/api/financial-reports/balance-sheet?as_of=202
                 "account_id": 6,
                 "account_code": "2101",
                 "account_name": "Account Payable",
-                "balance": -0
+                "balance": 0
             },
             {
                 "account_id": 7,
                 "account_code": "2102",
                 "account_name": "Tax Payable",
-                "balance": -0
+                "balance": 0
             }
         ],
         "total": 0
@@ -439,13 +439,13 @@ curl -X GET "http://localhost:8000/api/financial-reports/balance-sheet?as_of=202
                 "account_id": 8,
                 "account_code": "3101",
                 "account_name": "Owner Capital",
-                "balance": -0
+                "balance": 1000
             },
             {
                 "account_id": 9,
                 "account_code": "3201",
                 "account_name": "Current Year Earning",
-                "balance": -0
+                "balance": 0
             }
         ],
         "net_income": 1000,
@@ -649,16 +649,9 @@ curl -X GET "http://localhost:8000/api/financial-reports/income-statement?from=2
     "total": 1000
   },
   "expenses": {
-    "accounts": [
-      {
-        "account_id": 13,
-        "account_code": "5101",
-        "account_name": "Cost of Food Sales",
-        "balance": 300
-      }
-    ],
-    "total": 300
+    "accounts": [],
+    "total": 0
   },
-  "net_income": 700
+  "net_income": 1000
 }
 ```
