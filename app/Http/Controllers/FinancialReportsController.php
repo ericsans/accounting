@@ -34,7 +34,12 @@ class FinancialReportsController extends Controller
             ])
             ->selectRaw('COALESCE(SUM(CASE WHEN journal_entries.id IS NOT NULL THEN journal_entry_details.debit ELSE 0 END), 0) as total_debit')
             ->selectRaw('COALESCE(SUM(CASE WHEN journal_entries.id IS NOT NULL THEN journal_entry_details.credit ELSE 0 END), 0) as total_credit')
-            ->groupBy('accounts.id', 'accounts.code', 'accounts.name', 'account_classifications.root_type')
+            ->groupBy(
+                'accounts.id',
+                'accounts.code',
+                'accounts.name',
+                'account_classifications.root_type'
+            )
             ->orderBy('accounts.code')
             ->get()
             ->map(function ($account) {
