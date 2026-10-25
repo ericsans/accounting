@@ -459,12 +459,14 @@ curl -X GET "http://localhost:8000/api/financial-reports/balance-sheet?as_of=202
     * `from` (required, date): The start date for the income statement (`YYYY-MM-DD`).
     * `to` (required, date): The end date for the income statement (`YYYY-MM-DD`). Must be on or after `from`
 
+#### cURL Request
+
 ```bash
 curl -X GET "http://localhost:8000/api/financial-reports/income-statement?from=2026-10-01&to=2026-10-31" \
   -H "Accept: application/json"
 ```
 
-Example response:
+#### Response (`200 OK`)
 
 ```json
 {
