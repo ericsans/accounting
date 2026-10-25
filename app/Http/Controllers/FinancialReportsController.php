@@ -103,7 +103,7 @@ class FinancialReportsController extends Controller
             ->leftJoin('journal_entry_details', 'journal_entry_details.account_id', '=', 'accounts.id')
             ->leftJoin('journal_entries', function ($join) use ($asOf) {
                 $join->on('journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
-                    ->whereDate('journal_entries.journal_date', '<=', $asOf);
+                     ->whereDate('journal_entries.journal_date', '<=', $asOf);
             })
             ->select([
                 'accounts.id',
@@ -161,8 +161,8 @@ class FinancialReportsController extends Controller
             ->leftJoin('journal_entry_details', 'journal_entry_details.account_id', '=', 'accounts.id')
             ->leftJoin('journal_entries', function ($join) use ($from, $to) {
                 $join->on('journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
-                    ->whereDate('journal_entries.journal_date', '>=', $from)
-                    ->whereDate('journal_entries.journal_date', '<=', $to);
+                     ->whereDate('journal_entries.journal_date', '>=', $from)
+                     ->whereDate('journal_entries.journal_date', '<=', $to);
             })
             ->whereIn('account_classifications.root_type', [
                 AccountClassificationRootType::Revenue->value,
